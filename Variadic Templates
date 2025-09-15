@@ -1,0 +1,169 @@
+1
+
+#include <iostream>
+
+template<typename T>
+T sum(const T& arg) {
+    return arg;
+}
+
+
+template<typename T, typename ...Rest>
+T sum(const  T& first, const Rest&... rest){
+    return first + sum(rest...);
+}
+
+int main() {
+    std::cout << sum(3, 4, 5) << '\n';
+    double a = 3.5, b = 1.5, c = 2.1;
+    std::cout << sum(a, b, c) << '\n';
+    float x = 2.2, y = 5.6, z = 4.4;
+    std::cout << sum(x, y, z);
+}
+
+
+2
+
+#include <iostream>
+
+template<typename T>
+T findMax(const T& arg1, const T& arg2) {
+    return std::max(arg1,arg2);
+}
+
+template<typename T,typename ...Rest>
+T findMax(const T& first, const Rest&... rest) {
+    return findMax(first, findMax(rest...));
+}
+
+int main() {
+    std::cout << findMax(4, 8, 22) << '\n';
+    std::cout << findMax(4.9, 12.8, 12.7);
+    
+}
+
+3
+
+#include <iostream>
+
+int countArgs() {
+    return 0;
+}
+
+
+template<typename T>
+int countArgs(const T& arg) {
+    return 1;
+}
+
+
+template<typename T, typename ...Rest>
+int countArgs(const T& first, const Rest& ...rest){
+    return countArgs(first) + countArgs(rest...);
+}
+
+int main() {
+    std::cout << countArgs(3, 4, 5, 6, 7, 8) << '\n';
+    std::cout << countArgs() << '\n';
+    std::cout << countArgs(5.6,40.50);
+    
+}
+
+
+4
+
+#include <iostream>
+#include <string>
+
+template<typename T>
+std::string makeSentence(const T& str) {
+    return std::string(str) + ".";
+}
+
+template<typename T, typename ...Rest>
+std::string makeSentence(const T& first, const Rest& ...rest) {
+    std::string res = std::string(first) + " " + makeSentence(rest...);
+    return res;
+}
+
+
+
+int main() {
+    
+    auto sentence = makeSentence("GNU's", "Not", "Unix");
+    std::cout << sentence << '\n';
+
+    auto greeting = makeSentence("Hello", "world");
+    std::cout << greeting;
+    
+}
+
+5
+
+#include <iostream>
+
+class Logger {
+
+private:
+    int count;
+    
+public:
+    
+    Logger(int c): count(c) {}
+    
+    template<typename T>
+    void log(const T& arg) {
+        for(int i = 0; i < count; i++){
+            std::cout << " ";
+        }
+        std::cout << arg << '\n';
+    }
+    
+    template<typename T, typename ...Rest>
+    void log(const T& first, const Rest& ...rest){
+        log(first);
+        log(rest...);
+        
+    }
+    
+    
+};
+
+int main() {
+    Logger logger(4);  // отступ 4 пробела
+    logger.log("Hello", 42, 3.14, 'A');
+    
+    
+}
+
+
+6
+
+#include <iostream>
+
+template<typename Foo, typename T>
+void applyAndPrint(Foo func, const T& arg) {
+    auto res = func(arg);
+    std::cout << res << '\n';
+}
+
+template<typename Foo, typename T, typename ...Rest>
+void applyAndPrint(Foo func, const T& first, const Rest& ...rest) {
+    auto res = func(first);
+    std::cout << res << '\n';
+    applyAndPrint(func, rest...);
+}
+
+int square(int x) {
+    return x * x;
+}
+
+int main() {
+    applyAndPrint(square, 2, 3, 4, 5);
+}
+
+7
+
+
+
+
