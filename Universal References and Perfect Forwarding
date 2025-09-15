@@ -1,0 +1,76 @@
+1
+
+#include <iostream>
+
+void foo(int &l_value) {
+    std::cout << "[lvalue]";
+}
+
+void foo(int &&r_value){
+    std::cout << "[rvalue]";
+}
+
+void foo(const char* str) {
+    std::cout << "[lvalue]";
+}
+
+template<typename T>
+void process(T&& arg) {
+    foo(std::forward<T>(arg));
+}
+
+template<typename T>
+void betterPrint(T&& arg) {
+    std::cout << std::forward<T>(arg);
+    process(std::forward<T>(arg));
+    std::cout << '\n';
+}
+
+
+template<typename T, typename ...Rest>
+void betterPrint(T&& first, Rest&& ...rest) {
+    
+    std::cout << std::forward<T>(first);
+    process(std::forward<T>(first));
+    std::cout << '\n';
+    
+    betterPrint(std::forward<Rest>(rest)...);
+    
+}
+
+int main() {
+    
+    int x = 42;
+    betterPrint(x, 100, "hello");
+
+}
+
+2
+
+#include <iostream>
+
+template<typename T, typename... Args>
+T makeObject(Args&&... args) {
+    return T(std::forward<Args>(args)...);
+}
+
+class Person {
+    std::string name;
+    int age;
+public:
+    Person(std::string n, int a) : name(std::move(n)), age(a) {}
+    
+    void print() {
+        std::cout << name << '\n' << age << '\n';
+    }
+};
+
+
+
+int main() {
+    
+    auto person = makeObject<Person>("Alice", 25);
+    
+    person.print();
+    
+}
