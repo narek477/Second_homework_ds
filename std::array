@@ -181,3 +181,187 @@ int main() {
     
     return 0;
 }
+
+8
+
+#include <iostream>
+#include <array>
+
+class Matrix3x3 {
+    
+private:
+    std::array<std::array<int, 3>, 3> arr;
+    
+public:
+
+    Matrix3x3(int a11, int a12, int a13,
+              int a21, int a22, int a23,
+              int a31, int a32, int a33){
+        arr[0][0] = a11; arr[0][1] = a12; arr[0][2] = a13;
+        arr[1][0] = a21; arr[1][1] = a22; arr[1][2] = a23;
+        arr[2][0] = a31; arr[2][1] = a32; arr[2][2] = a33;
+    }
+    
+    int getElement(int row,int col) const {
+        return arr[row][col];
+    }
+    
+    void setElement(int row, int col, int value) {
+        arr[row][col] = value;
+    }
+    
+    void transpose() {
+        for(int i = 0; i < 3; i++){
+            for(int j = i + 1; j < 3; j++){
+                std::swap(arr[i][j], arr[j][i]);
+            }
+        }
+    }
+    
+    void print() {
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                std::cout << arr[i][j] << " ";
+            }
+            std::cout << '\n';
+        }
+    }
+};
+
+
+int main() {
+    Matrix3x3 matrix(1, 2, 3, 4, 5, 6, 7, 8, 9);
+    matrix.print();
+    std::cout << std::endl;
+    matrix.transpose();
+    matrix.print();
+    
+}
+
+9
+
+#include <iostream>
+#include <array>
+
+template<typename T, int N>
+void shiftLeft(std::array<T, N>& arr, int count){
+    
+    if(count == 0) {
+        return;
+    }
+    
+    std::array<T, N> temp;
+    
+    for(int i = 0; i < count; i++){
+        temp[i] = arr[i];
+    }
+    
+    for(int i = 0; i < arr.size() - count; i++){
+        arr[i] = arr[i + count];
+    }
+    
+    for(int i = 0; i < count; i++){
+        arr[arr.size() - count + i] = temp[i];
+    }
+    
+}
+
+
+int main() {
+    std::array<int, 5> arr = {1, 2, 3, 4, 5};
+    shiftLeft<int, 5>(arr, 2);
+    
+    for(int i = 0; i < 5; i++){
+        std::cout << arr[i] << ' ';
+    }
+    
+}
+
+10
+
+#include <iostream>
+#include <array>
+
+
+template<typename T, int Cols, int Rows, typename Func>
+std::array<std::array<T, Cols>, Rows> process2DArray(std::array<std::array<T, Cols>, Rows> arr, Func func){
+    for(int i = 0; i < Rows; i++){
+        for(int j = 0; j < Cols; j++){
+            arr[i][j] = func(arr[i][j]);
+        }
+    }
+    
+    return arr;
+}
+
+int doubler(int x) {
+    return x * 2;
+}
+
+std::array<std::array<int, 3>, 3> matrix = {{
+    {{1, 2, 3}},
+    {{4, 5, 6}},
+    {{7, 8, 9}}
+}};
+
+
+int main() {
+    auto doubled = process2DArray<int, 3, 3>(matrix, doubler);
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            std::cout << doubled[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    
+    
+}
+
+
+11
+
+
+#include <iostream>
+#include <array>
+
+template<typename T, int N>
+bool validateArray(std::array<T, N>& arr, T min, T max){
+    for(int i = 0; i < arr.size(); i++){
+        if(!(arr[i] <= max && arr[i] >=min)){
+            return false;
+        }
+    }
+    return true;
+}
+
+
+int main() {
+    std::array<int, 4> scores = {85, 92, 78, 100};
+    bool valid = validateArray<int, 4>(scores, 0, 100);
+    std::cout << valid;
+}
+
+12
+
+#include <iostream>
+#include <array>
+
+template<int N>
+std::array<int, 256> countFrequency(const std::array<char, N>& arr) {
+    std::array<int, 256> freq = {};
+    
+    for(int i = 0; i < N; i++){
+        char c = arr[i];
+        freq[c]++;
+    }
+    return freq;
+}
+
+
+int main() {
+    std::array<char, 5> text = {'h', 'e', 'l', 'l', 'o'};
+    auto freq = countFrequency<5>(text);
+  
+   std::cout << freq['h'] << " " << freq['l'] << std::endl;
+    
+}
