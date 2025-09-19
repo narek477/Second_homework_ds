@@ -1,0 +1,183 @@
+1
+
+#include <iostream>
+#include <array>
+
+std::array<int, 5> createArray() {
+    std::array<int, 5> arr;
+    for(int i = 0; i < arr.size(); i++){
+        arr[i] = i + 1;
+    }
+    return arr;
+}
+
+
+int main() {
+    std::array<int, 5> arr = createArray();
+    for(int i = 0; i < arr.size(); i++){
+        std::cout << arr[i] << " "; 
+    }
+    
+}
+
+2
+
+
+#include <iostream>
+#include <array>
+
+void fillArray(std::array<int, 7>& arr, int val) {
+    for(int i = 0; i < arr.size(); i++){
+        arr[i] = val;
+    }
+}
+
+int main() {
+    std::array<int, 7> arr;
+    fillArray(arr, 21);
+    for(int i = 0; i < arr.size(); i++){
+        std::cout << arr[i] << " ";
+    }
+    
+}
+
+
+3
+
+#include <iostream>
+#include <array>
+
+
+template<int N>
+int countEven(std::array<int, N> arr) {
+    int count = 0;
+    for(int i = 0; i < arr.size(); i++){
+        if(arr[i] % 2 == 0){
+            count++;
+        }
+    }
+    
+    return count;
+}
+
+int main() {
+    std::array<int, 5> arr = {1, 4, 6 ,8, 3};
+    int count = countEven<5>(arr);
+    std::cout << count << std::endl;
+    
+}
+
+
+4
+
+#include <iostream>
+#include <array>
+
+
+template<typename T, int N>
+int findElement(std::array<T, N>& arr, T val){
+    
+    for(int i = 0; i < arr.size(); i++){
+        if(arr[i] == val){
+            return i;
+        }
+    }
+    return -1;
+}
+
+
+int main() {
+    std::array<int, 4> arr = {1, 2, 3, 2};
+    int eli = findElement<int, 4>(arr, 2);
+    std::cout << eli << std::endl;
+    
+    
+}
+
+
+5
+
+#include <iostream>
+#include <array>
+
+
+template<typename T, int N>
+void reverseArray(std::array<T, N>& arr){
+    for(int i = 0; i < arr.size() / 2; i++) {
+       std::swap(arr[i], arr[arr.size() - 1 - i]);
+    }
+}
+
+
+int main() {
+   std::array<int, 5> arr = {1, 2, 3, 4, 5};
+   reverseArray<int, 5>(arr);
+   for(int i = 0; i < arr.size(); i++){
+       std::cout << arr[i] << " ";
+   }
+   
+}
+
+6
+
+#include <iostream>
+#include <array>
+
+template<typename T, int N>
+bool compareArrays(std::array<T, N>& arr, std::array<T, N>& brr){
+    for(int i = 0; i < N; i++){
+        if(arr[i] != brr[i]){
+            return false;
+        }
+    }
+    return true;
+}
+
+
+int main() {
+   std::array<int, 5> arr = {1, 2, 3, 4, 5};
+   std::array<int, 5> brr = {1, 2, 3, 4, 5};
+   std::cout << compareArrays<int, 5>(arr, brr) << std::endl;
+   
+   std::array<double, 3> crr = {2.3, 4.5, 2.1};
+   std::array<double, 3> drr = {2.3, 4.5, 1.8};
+   std::cout << compareArrays<double, 3>(crr, drr) << std::endl;
+   
+   
+}
+
+7
+
+#include <iostream>
+#include <array>
+#include <stdexcept>
+
+template<typename T, size_t N, size_t M>
+std::array<T, M> copySubArray(std::array<T, N>& arr, int start_index, int count){
+    if(start_index + count > N  || start_index >= N || count > N){
+        throw std::out_of_range("Invalid startindex or count");
+    }
+    
+    std::array<T, M> res;
+    for(int i = 0; i < count; i++){
+        res[i] = arr[start_index + i];
+    }
+    return res;
+}
+
+
+int main() {
+    try{
+        
+        std::array<int, 10> source = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        auto sub = copySubArray<int, 10, 5>(source, 2, 5);
+        for(int i = 0; i < sub.size(); i++){
+            std::cout << sub[i] << " ";
+        }
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Error" << e.what() << std::endl;
+    }    
+    
+    return 0;
+}
