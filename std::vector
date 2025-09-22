@@ -206,3 +206,212 @@ int main() {
     }
     
 }
+
+8
+
+#include <iostream>
+#include <vector>
+
+int findSubsequence(std::vector<int>& man, std::vector<int>& sub){
+    if(man.size() < sub.size()) {
+        return -1;
+    }
+    
+    if(sub.empty()) {
+        return -1;
+    }
+    
+    for(int i = 0; i < man.size() - sub.size(); i++){
+        bool found = true;
+        for(int j = 0; j < sub.size(); j++){
+            if(man[i + j] != sub[j]){
+                found = false;
+                break;
+            }
+        }
+        
+        if(found){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int main() {
+    std::vector<int> main_vec = {1, 2, 3, 4, 5, 6};
+    std::vector<int> sub_vec = {3, 4, 5};
+    int index = findSubsequence(main_vec, sub_vec);
+    std::cout << index << std::endl;
+    
+}
+
+9
+
+#include <iostream>
+#include <vector>
+
+std::vector<std::vector<int>> groupAdjacent(std::vector<int>& vec) {
+    std::vector<std::vector<int>> result;
+    
+    std::vector<int> current = {vec[0]};
+    
+    for(int i = 1; i < vec.size(); i++){
+        if(vec[i] == vec[i - 1]){
+            current.push_back(vec[i]);
+        } else {
+            result.push_back(current);
+            current = {vec[i]};
+        }
+    }
+    result.push_back(current);
+    return result;
+}
+
+int main() {
+    std::vector<int> vec = {1, 1, 2, 2, 2, 3, 1, 1};
+    std::vector<std::vector<int>> groups = groupAdjacent(vec);
+    printgroups(groups);
+}
+
+10
+
+#include <iostream>
+#include <vector>
+
+template<typename T, typename Func>
+std::vector<T> filterVector(std::vector<T>& vec, Func func){
+    std::vector<T> res;
+    
+    for(int i = 0; i < vec.size(); i++){
+        if(func(vec[i])){
+            res.push_back(vec[i]);
+        }
+    }
+    
+    return res;
+}
+
+bool isEven(int x) { return x % 2 == 0; }
+
+int main() {
+    std::vector<int> vec = {1, 2, 3, 4, 5, 6};
+    std::vector<int> filtered = filterVector(vec, isEven);
+    for(int i = 0; i < filtered.size(); i++){
+        std::cout << filtered[i] << " ";
+    }
+}
+
+11
+
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+
+class DynamicMatrix {
+    
+private:
+    std::vector<std::vector<int>> matrix;
+    int rows;
+    int cols;
+    
+public:
+    DynamicMatrix(int rows, int cols): rows(rows), cols(cols) {
+        matrix.resize(rows);
+        for(int i = 0; i < rows; i++){
+            matrix[i].resize(cols, 0);
+        }
+    }
+    
+    int getElement(int row, int col){
+        if (row >= rows || col >= cols || row < 0 || col < 0) {
+            throw std::out_of_range("Matrix indices out of range");
+        }
+        return matrix[row][col];
+    }
+    
+    void setElement(int row, int col, int value){
+        if (row >= rows || col >= cols || row < 0 || col < 0) {
+            throw std::out_of_range("Matrix indices out of range");
+        }
+        matrix[row][col] = value;
+    }
+    
+    void addRow() {
+        matrix.push_back(std::vector<int>(cols, 0));
+        rows++;
+    }
+    
+    void addColumn() {
+        for(int i = 0; i < rows; i++){
+            matrix[i].push_back(0);
+        }
+        cols++;
+    }
+    
+    void print() const {
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                std::cout << matrix[i][j];
+                if(j < cols - 1) {
+                    std::cout << " ";
+                }
+                
+            }
+            std::cout << std::endl;
+        }
+        
+    }
+    
+    
+};
+
+int main() {
+    DynamicMatrix matrix(3, 3);
+    matrix.setElement(1, 1, 42);
+    matrix.addRow();
+    matrix.addColumn();
+    matrix.print();
+}
+
+12
+
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+
+std::vector<int> findIntersection(std::vector<int>& v1, std::vector<int>& v2){
+    std::vector<int> res;
+    
+    for(int i = 0; i < v1.size(); i++){
+        bool foundinv2 = false;
+        for(int j = 0; j < v2.size(); j++){
+            if(v1[i] == v2[j]){
+                foundinv2 = true;
+                break;
+            }
+        }
+        
+        bool added = false;
+        for(int k = 0; k < res.size(); k++){
+            if(res[k] == v1[i]){
+                added = true;
+                break;
+            }
+        }
+        
+        if(foundinv2 && !added){
+            res.push_back(v1[i]);
+        }
+    }
+    return res;
+}
+
+int main() {
+    std::vector<int> a = {1, 2, 3, 4};
+    std::vector<int> b = {3, 4, 5, 6};
+    std::vector<int> inter = findIntersection(a, b);
+    for(int i = 0; i < inter.size(); i++){
+       std::cout << inter[i] << " "; 
+    }
+}
+
